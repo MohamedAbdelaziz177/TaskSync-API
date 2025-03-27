@@ -3,6 +3,8 @@ package com.SpringProj.todo.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +19,9 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "user")
 @Data
+@Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
 
@@ -41,7 +45,7 @@ public class User implements UserDetails {
     @NotNull(message = "password is required")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

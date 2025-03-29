@@ -16,7 +16,6 @@ import java.util.Date;
 public class TaskUpdateDto {
 
     @NotBlank
-    @NotNull
     @Length(min = 1, max = 50)
     private String title;
 
@@ -24,7 +23,6 @@ public class TaskUpdateDto {
     private String description;
 
     private String priority;
-
 
     private String category;
 

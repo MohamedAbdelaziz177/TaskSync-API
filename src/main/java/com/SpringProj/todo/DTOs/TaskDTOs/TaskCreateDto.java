@@ -14,16 +14,16 @@ import java.util.Date;
 @NoArgsConstructor
 public class TaskCreateDto {
 
-    @NotBlank
-    @NotNull
-    @Length(min = 1, max = 50)
+    @NotBlank(message = "title cannot be empty")
+    @Length(min = 1, max = 50, message = "length must be between 1 and 50")
     private String title;
 
-    @Length(min = 10, max = 350)
+    @Length(min = 10, max = 350, message = "length must be between 10 and 350")
     private String description;
 
     private String priority;
 
+    @NotNull
     private Date deadline;
 
     private String categoryId;

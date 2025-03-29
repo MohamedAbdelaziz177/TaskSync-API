@@ -2,6 +2,7 @@ package com.SpringProj.todo.Model;
 
 import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -13,6 +14,7 @@ public class SubTask {
     private Long id;
 
     @Length(min = 1, max = 50)
+    @NotNull
     private String title;
 
     @Length(min = 1, max = 250)

@@ -43,9 +43,11 @@ public class Task {
 
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TaskStatus status;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TaskPriority priority;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")

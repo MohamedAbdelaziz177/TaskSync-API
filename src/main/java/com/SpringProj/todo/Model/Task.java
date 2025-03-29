@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -25,10 +26,10 @@ public class Task {
 
     @NotBlank
     @NotNull
-    @Max(50)
+    @Length(min = 1, max = 50)
     private String title;
 
-    @Max(300)
+    @Length(min = 10, max = 350)
     private String description;
 
     @Column(name = "created_at")

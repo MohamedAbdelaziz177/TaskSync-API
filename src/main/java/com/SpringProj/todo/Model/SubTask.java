@@ -3,10 +3,16 @@ package com.SpringProj.todo.Model;
 import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "subtask")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubTask {
 
     @Id

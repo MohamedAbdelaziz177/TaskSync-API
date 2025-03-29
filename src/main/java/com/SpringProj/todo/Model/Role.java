@@ -2,13 +2,16 @@ package com.SpringProj.todo.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "role")
 @Data
+
 public class Role {
 
     @Id

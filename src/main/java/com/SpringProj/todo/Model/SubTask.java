@@ -1,5 +1,6 @@
 package com.SpringProj.todo.Model;
 
+import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,6 +17,9 @@ public class SubTask {
 
     @Length(min = 1, max = 250)
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @ManyToOne
     @JoinColumn(name = "task_id")

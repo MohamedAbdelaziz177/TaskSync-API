@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface SubTaskRepository extends JpaRepository<SubTask, Long> {
 
+    Optional<SubTask> findByTitle(String title);
     Optional<List<SubTask>> findByTask_Id(Long id);
+
 
 }

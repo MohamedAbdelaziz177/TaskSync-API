@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "task")
@@ -37,4 +38,7 @@ public class Task {
 
     @Column(name = "deadline")
     private Date Deadline;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
+    private List<SubTask> subTasks;
 }

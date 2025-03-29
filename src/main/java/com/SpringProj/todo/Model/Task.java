@@ -1,5 +1,7 @@
 package com.SpringProj.todo.Model;
 
+import com.SpringProj.todo.Enums.TaskPriority;
+import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +40,13 @@ public class Task {
 
     @Column(name = "deadline")
     private Date Deadline;
+
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
     private List<SubTask> subTasks;

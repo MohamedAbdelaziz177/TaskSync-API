@@ -41,4 +41,8 @@ public class Task {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
     private List<SubTask> subTasks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private  Category category;
 }

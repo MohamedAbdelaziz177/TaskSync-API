@@ -63,6 +63,10 @@ public class User implements UserDetails {
     )
     private List<Category> categories;
 
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

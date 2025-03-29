@@ -1,9 +1,8 @@
 package com.SpringProj.todo.Services.Auth;
 
-import com.SpringProj.todo.DTOs.AuthResponseDto;
-import com.SpringProj.todo.DTOs.LoginDto;
-import com.SpringProj.todo.DTOs.RegisterDto;
-import com.SpringProj.todo.Model.Role;
+import com.SpringProj.todo.DTOs.AuthDTOs.AuthResponseDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.UserRepository;
 import com.SpringProj.todo.Services.Jwt.JwtService;
@@ -18,9 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

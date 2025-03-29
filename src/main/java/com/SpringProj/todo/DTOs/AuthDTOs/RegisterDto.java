@@ -1,4 +1,4 @@
-package com.SpringProj.todo.DTOs;
+package com.SpringProj.todo.DTOs.AuthDTOs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;

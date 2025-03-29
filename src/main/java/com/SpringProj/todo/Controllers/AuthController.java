@@ -1,8 +1,8 @@
 package com.SpringProj.todo.Controllers;
 
-import com.SpringProj.todo.DTOs.AuthResponseDto;
-import com.SpringProj.todo.DTOs.LoginDto;
-import com.SpringProj.todo.DTOs.RegisterDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.AuthResponseDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
 import com.SpringProj.todo.Services.Auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

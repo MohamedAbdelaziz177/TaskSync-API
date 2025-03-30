@@ -20,6 +20,6 @@ public class SubTaskUpdateDto {
 
     private String status;
 
-    @NotNull(message = "tastId must be assigned")
+    @NotNull(message = "task Id must be assigned")
     private Long TaskId;
 }

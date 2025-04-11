@@ -64,20 +64,24 @@ public class User implements UserDetails {
     private List<Category> categories;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Task> tasks;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<RefreshToken> refreshTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole()))
-                .collect(Collectors.toList());
+        return roles;
     }
 
     @Override
     public String getUsername() {
         return email;
     }
+
+   // @Override
+   // public String getPassword(){return password;}
 
     @Override
     public boolean isAccountNonExpired() {

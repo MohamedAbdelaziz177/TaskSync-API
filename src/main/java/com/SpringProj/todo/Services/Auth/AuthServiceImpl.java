@@ -1,10 +1,11 @@
 package com.SpringProj.todo.Services.Auth;
 
-import com.SpringProj.todo.DTOs.AuthDTOs.AuthResponseDto;
+import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.UserRepository;
+import com.SpringProj.todo.Responses.TokenResponse;
 import com.SpringProj.todo.Services.Jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,8 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public AuthResponseDto login(LoginDto loginDto) {
+    public AuthResponse login(LoginDto loginDto) {
 
         try {
 
@@ -38,20 +41,24 @@ public class AuthServiceImpl implements AuthService {
 
             Authentication authRes = authenticationManager.authenticate(authToken);
 
-            UserDetails user = userDetailsService.loadUserByUsername(loginDto.getEmail());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
 
-            String token = jwtService.generateToken(user, new HashMap<>());
+            Optional<User> user = userRepository.findByEmail(userDetails.getUsername());
 
-            return AuthResponseDto.builder()
-                    .token(token)
-                    .username(user.getUsername())
+            //String token = jwtService.generateToken(user, new HashMap<>());
+            TokenResponse tokenResponse = jwtService.getTokens(user.get());
+
+            return AuthResponse.builder()
+                    .token(tokenResponse.getAccessToken())
+                    .username(user.get().getUsername())
+                    .refreshToken(tokenResponse.getRefreshToken())
                     .isAuthenticated(true)
                     .expires(jwtService.getExpiry())
                     .build();
 
         } catch (AuthenticationException e) {
 
-            return AuthResponseDto.builder()
+            return AuthResponse.builder()
                     .isAuthenticated(false)
                     .message(e.getMessage())
                     .build();
@@ -60,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    public AuthResponseDto register(RegisterDto registerDto) {
+    public AuthResponse register(RegisterDto registerDto) {
 
         try{
 
@@ -74,14 +81,14 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
 
-            return AuthResponseDto.builder()
+            return AuthResponse.builder()
                     .message("User Registered Successfully - plz check ur email for confirmation")
                     .isAuthenticated(true)
                     .build();
 
         }catch (Exception e)
         {
-            return AuthResponseDto.builder()
+            return AuthResponse.builder()
                     .isAuthenticated(false)
                     .message(e.getMessage())
                     .build();

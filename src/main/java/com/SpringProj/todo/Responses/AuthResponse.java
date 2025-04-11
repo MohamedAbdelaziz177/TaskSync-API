@@ -13,6 +13,8 @@ public class AuthResponse {
 
     private String username;
     private String token;
+    private String refreshToken;
+
     private Date expires;
 
     private boolean isAuthenticated;

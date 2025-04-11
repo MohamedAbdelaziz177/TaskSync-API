@@ -1,4 +1,4 @@
-package com.SpringProj.todo.DTOs.AuthDTOs;
+package com.SpringProj.todo.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Builder
-public class AuthResponseDto {
+public class AuthResponse {
 
     private String username;
     private String token;

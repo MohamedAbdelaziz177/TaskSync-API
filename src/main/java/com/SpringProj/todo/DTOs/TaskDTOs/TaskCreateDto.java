@@ -26,7 +26,7 @@ public class TaskCreateDto {
     @NotNull
     private Date deadline;
 
-    private String categoryId;
+    private Long categoryId;
 
     private String status = "PENDING";
 }

@@ -1,5 +1,6 @@
 package com.SpringProj.todo.Model;
 
+import com.SpringProj.todo.DTOs.TaskDTOs.TaskCreateDto;
 import com.SpringProj.todo.Enums.TaskPriority;
 import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
@@ -22,6 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 
 public class Task {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +61,7 @@ public class Task {
     private  Category category;
 
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 }

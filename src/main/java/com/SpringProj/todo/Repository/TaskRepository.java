@@ -1,5 +1,6 @@
 package com.SpringProj.todo.Repository;
 
+import com.SpringProj.todo.Enums.TaskStatus;
 import com.SpringProj.todo.Model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<List<Task>> findByUser_IdAndCategory_Id(Long userId, Long categoryId);
 
     Optional<List<Task>> findByUser_Id(Long userId);
+
+    Optional<List<Task>> findByUser_IdAndStatus(Long userId, TaskStatus status);
+
+    // Optional<List<Task>> findByIdAndUser_Id(Long id, Long userId);
 
 
 }

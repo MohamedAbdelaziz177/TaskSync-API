@@ -1,5 +1,8 @@
 package com.SpringProj.todo.DTOs.SubTaskDTOs;
 
+import com.SpringProj.todo.Enums.TaskStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,9 @@ public class SubTaskCreateDto {
 
     @NotNull(message = "tastId must be assigned")
     private Long taskId;
+
+
+    private String status = "PENDING";
 
     @NotNull(message = "deadline must be assigned")
     private Date deadline;

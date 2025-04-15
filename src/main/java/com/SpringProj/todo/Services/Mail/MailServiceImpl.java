@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailServiceImpl implements MailService {
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     public void sendSimpleMail(String to, String subject, String content) {
 

@@ -14,7 +14,7 @@ public interface AuthService {
     AuthResponse register(RegisterDto registerDto);
     TokenResponse refreshToken(String refreshToken);
     void sendOtpToUser(User user);
-    Boolean confirmEmail(ConfirmEmailDto confirmEmailDto);
-    Boolean resetPassword(ResetPasswordDto resetPasswordDto);
+    void confirmEmail(ConfirmEmailDto confirmEmailDto);
+    void resetPassword(ResetPasswordDto resetPasswordDto);
     void sendOtpToUser(String email);
 }

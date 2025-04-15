@@ -63,10 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-
     public AuthResponse register(RegisterDto registerDto) {
-
-
 
             User user = User.builder()
                     .email(registerDto.getEmail())
@@ -75,6 +72,8 @@ public class AuthServiceImpl implements AuthService {
                     .lastName(registerDto.getLastName())
                     .roles(new ArrayList<>())
                     .build();
+
+            sendOtpToUser(registerDto.getEmail());
 
             userRepository.save(user);
 
@@ -85,7 +84,6 @@ public class AuthServiceImpl implements AuthService {
 
 
     }
-
 
     public TokenResponse refreshToken(String refreshToken) {
 
@@ -118,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
         sendOtpToUser(user);
     }
 
-    public Boolean confirmEmail(ConfirmEmailDto confirmEmailDto)
+    public void confirmEmail(ConfirmEmailDto confirmEmailDto)
     {
         User user = userRepository.findByEmail(confirmEmailDto.getEmail()).orElseThrow(() ->
                 new NoSuchElementException("No such user found"));
@@ -131,11 +129,9 @@ public class AuthServiceImpl implements AuthService {
         user.setCode(null);
 
         userRepository.save(user);
-
-        return true;
     }
 
-    public Boolean resetPassword(ResetPasswordDto resetPasswordDto)
+    public void resetPassword(ResetPasswordDto resetPasswordDto)
     {
         User user = userRepository.findByEmail(resetPasswordDto.getEmail()).orElseThrow(() ->
                 new NoSuchElementException("No such user found"));
@@ -153,7 +149,6 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return true;
     }
 
 

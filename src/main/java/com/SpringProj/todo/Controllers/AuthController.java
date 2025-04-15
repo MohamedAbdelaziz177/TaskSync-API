@@ -1,5 +1,10 @@
 package com.SpringProj.todo.Controllers;
 
+import com.SpringProj.todo.DTOs.AuthDTOs.ConfirmEmailDto;
+import com.SpringProj.todo.DTOs.AuthDTOs.ResetPasswordDto;
+import com.SpringProj.todo.Exceptions.CodeNotValidException;
+import com.SpringProj.todo.Exceptions.PasswordsNotMatchedException;
+import com.SpringProj.todo.Responses.ApiResponse;
 import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
@@ -110,8 +115,70 @@ public class AuthController {
 
     }
 
-    // logout
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<String>> ResetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
 
+        ApiResponse<String> res = new ApiResponse<>();
+        try{
+
+            authService.resetPassword(resetPasswordDto);
+            res.setSuccess(true);
+            res.setData("Password reset successfully");
+
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+        catch (PasswordsNotMatchedException | CodeNotValidException e)
+        {
+            res.setSuccess(false);
+            res.setMessage(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        }
+
+    }
+
+    @PostMapping("/confirm-email")
+    public ResponseEntity<ApiResponse<String>> ConfirmEmail(@RequestBody ConfirmEmailDto confirmEmailDto) {
+
+        ApiResponse<String> res = new ApiResponse<>();
+        try{
+
+            authService.confirmEmail(confirmEmailDto);
+            res.setSuccess(true);
+            res.setData("Email confirmed successfully");
+
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+        catch (CodeNotValidException e)
+        {
+            res.setSuccess(false);
+            res.setMessage(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        }
+    }
+
+    @PostMapping("/resend-confirmation-code")
+    public ResponseEntity<ApiResponse<String>> ResendConfirmationCode(@RequestBody String email) {
+
+        ApiResponse<String> res = new ApiResponse<>();
+
+        try{
+
+            authService.sendOtpToUser(email);
+
+            res.setSuccess(true);
+            res.setData("Confirmation code sent successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+        catch (NoSuchElementException e)
+        {
+            res.setSuccess(false);
+            res.setMessage(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
+    }
 
 }

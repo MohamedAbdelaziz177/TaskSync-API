@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -34,42 +35,35 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthResponse login(LoginDto loginDto) {
 
-        try {
-
             Authentication authToken =
                     new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+
 
             Authentication authRes = authenticationManager.authenticate(authToken);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
 
-            Optional<User> user = userRepository.findByEmail(userDetails.getUsername());
+            User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+                    new NoSuchElementException("No such user found"));
 
             //String token = jwtService.generateToken(user, new HashMap<>());
-            TokenResponse tokenResponse = jwtService.getTokens(user.get());
+            TokenResponse tokenResponse = jwtService.getTokens(user);
 
             return AuthResponse.builder()
                     .token(tokenResponse.getAccessToken())
-                    .username(user.get().getUsername())
+                    .username(user.getUsername())
                     .refreshToken(tokenResponse.getRefreshToken())
                     .isAuthenticated(true)
                     .expires(jwtService.getExpiry())
                     .build();
 
-        } catch (AuthenticationException e) {
-
-            return AuthResponse.builder()
-                    .isAuthenticated(false)
-                    .message(e.getMessage())
-                    .build();
-        }
 
     }
 
 
     public AuthResponse register(RegisterDto registerDto) {
 
-        try{
+
 
             User user = User.builder()
                     .email(registerDto.getEmail())
@@ -86,13 +80,18 @@ public class AuthServiceImpl implements AuthService {
                     .isAuthenticated(true)
                     .build();
 
-        }catch (Exception e)
-        {
-            return AuthResponse.builder()
-                    .isAuthenticated(false)
-                    .message(e.getMessage())
-                    .build();
-        }
+
+    }
+
+
+    public TokenResponse refreshToken(String refreshToken) {
+
+            TokenResponse tokenResponse =  jwtService.refreshToken(refreshToken);
+
+            if(tokenResponse == null)
+                throw new NoSuchElementException("No such token found");
+
+            return tokenResponse;
 
     }
 

@@ -3,14 +3,15 @@ package com.SpringProj.todo.Controllers;
 import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
+import com.SpringProj.todo.Responses.TokenResponse;
 import com.SpringProj.todo.Services.Auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.naming.AuthenticationException;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,29 +21,94 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> Register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<AuthResponse> Register(@RequestBody RegisterDto registerDto) {
 
-        AuthResponse authResponse = authService.register(registerDto);
+        try{
 
-        if(!authResponse.isAuthenticated())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
+            AuthResponse authResponse = authService.register(registerDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+            if(!authResponse.isAuthenticated())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
+
+            return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+        }
+        catch (Exception e)
+        {
+            AuthResponse authResponse = AuthResponse.builder()
+                    .message(e.getMessage())
+                    .isAuthenticated(false)
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(authResponse);
+        }
+
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> Login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthResponse> Login(@RequestBody LoginDto loginDto) {
 
-        AuthResponse authResponse = authService.login(loginDto);
+        try {
 
-        if(!authResponse.isAuthenticated())
+            AuthResponse authResponse = authService.login(loginDto);
+
+            if(!authResponse.isAuthenticated())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
+
+
+
+            return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+        }
+        catch (NoSuchElementException e)
+        {
+            AuthResponse authResponse = AuthResponse.builder()
+                    .message("User not found")
+                    .isAuthenticated(false)
+                    .build();
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
+        }
+        catch (Exception e)
+        {
+            AuthResponse authResponse = AuthResponse.builder()
+                    .message(e.getMessage())
+                    .isAuthenticated(false)
+                    .build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(authResponse);
+        }
+
     }
 
     // Refresh token
+
+    @GetMapping("/refresh-token")
+    public ResponseEntity<TokenResponse> RefreshToken() {
+
+        try{
+
+            // get Ref token from cookie
+            TokenResponse tokenResponse =  authService.refreshToken("ref-token");
+            return ResponseEntity.status(HttpStatus.OK).body(tokenResponse);
+        }
+        catch (NoSuchElementException e)
+        {
+            TokenResponse tokenResponse = TokenResponse.builder()
+                    .success(false)
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(tokenResponse);
+        }
+        catch (Exception e)
+        {
+            TokenResponse tokenResponse = TokenResponse.builder()
+                    .success(false)
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tokenResponse);
+        }
+
+    }
 
     // logout
 

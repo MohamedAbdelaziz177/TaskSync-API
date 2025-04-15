@@ -3,6 +3,7 @@ package com.SpringProj.todo.Services.Jwt;
 import com.SpringProj.todo.Model.RefreshToken;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.RefreshTokenRepository;
+import com.SpringProj.todo.Repository.UserRepository;
 import com.SpringProj.todo.Responses.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,11 +23,33 @@ import java.util.function.Function;
 public class JwtService {
 
     final private RefreshTokenRepository refreshTokenRepository;
+    final private UserRepository userRepository;
 
     @Value("${jwt.secret}")
     private String secret;
 
 
+    public TokenResponse refreshToken(String tok) {
+
+        RefreshToken validToken = validateRefreshToken(tok);
+
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setSuccess(Boolean.TRUE);
+
+        if (validToken == null) {
+            tokenResponse.setSuccess(Boolean.FALSE);
+            return tokenResponse;
+        }
+
+            User user = validToken.getUser();
+            String accessToken = generateToken(user, new HashMap<>());
+
+            tokenResponse.setAccessToken(accessToken);
+            tokenResponse.setRefreshToken(generateRefreshToken(user.getId()).getToken());
+
+            return tokenResponse;
+
+    }
 
     public RefreshToken generateRefreshToken(Long userId){
 
@@ -37,23 +60,19 @@ public class JwtService {
         refreshToken.setCreatedAt(new Date(System.currentTimeMillis()));
         refreshToken.setExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15));
 
+        refreshTokenRepository.save(refreshToken);
+
         return refreshToken;
     }
 
-    public boolean validateRefreshToken(String refreshToken) {
+    public RefreshToken validateRefreshToken(String refreshToken) {
 
-        Optional<RefreshToken> refTok =  refreshTokenRepository.findByToken(refreshToken);
+        RefreshToken refTok =  refreshTokenRepository.findByToken(refreshToken).orElse(null);
 
-        if(refTok.isEmpty())
-            return false;
+        if(refTok == null || refTok.isRevoked() || refTok.getExpiresAt().before(new Date(System.currentTimeMillis())))
+            return null;
 
-        if(refTok.get().isRevoked())
-            return false;
-
-        if(refTok.get().getExpiresAt().before(new Date(System.currentTimeMillis())))
-            return false;
-
-        return true;
+        return refTok;
 
     }
 

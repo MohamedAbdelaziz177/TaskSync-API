@@ -87,7 +87,7 @@ public class AuthController {
 
         try{
 
-            // get Ref token from cookie
+            // get Ref token from cookie / authHeader / Request param
             TokenResponse tokenResponse =  authService.refreshToken("ref-token");
             return ResponseEntity.status(HttpStatus.OK).body(tokenResponse);
         }

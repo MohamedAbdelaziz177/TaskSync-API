@@ -16,4 +16,5 @@ public interface AuthService {
     void sendOtpToUser(User user);
     Boolean confirmEmail(ConfirmEmailDto confirmEmailDto);
     Boolean resetPassword(ResetPasswordDto resetPasswordDto);
+    void sendOtpToUser(String email);
 }

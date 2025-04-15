@@ -2,6 +2,8 @@ package com.SpringProj.todo.Services.Auth;
 
 import com.SpringProj.todo.DTOs.AuthDTOs.ConfirmEmailDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.ResetPasswordDto;
+import com.SpringProj.todo.Exceptions.CodeNotValidException;
+import com.SpringProj.todo.Exceptions.PasswordsNotMatchedException;
 import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
@@ -110,6 +112,12 @@ public class AuthServiceImpl implements AuthService {
         user.setVerified(false);
     }
 
+    public void sendOtpToUser(String email){
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("No such user found"));
+        sendOtpToUser(user);
+    }
+
     public Boolean confirmEmail(ConfirmEmailDto confirmEmailDto)
     {
         User user = userRepository.findByEmail(confirmEmailDto.getEmail()).orElseThrow(() ->
@@ -117,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
 
         if(!user.getCode().equals(confirmEmailDto.getOtp()) ||
                 user.getCodeExpiryDate().getTime() < System.currentTimeMillis())
-            return false;
+            throw new CodeNotValidException("Code not valid");
 
         user.setVerified(true);
         user.setCode(null);
@@ -134,12 +142,11 @@ public class AuthServiceImpl implements AuthService {
 
         if(!user.getCode().equals(resetPasswordDto.getOtp()) ||
                 user.getCodeExpiryDate().getTime() < System.currentTimeMillis())
-        {
-            return false;
-        }
+            throw new CodeNotValidException("Code not valid");
+
 
         if(!resetPasswordDto.getConfirmPassword().equals(resetPasswordDto.getPassword()))
-            return false;
+            throw new PasswordsNotMatchedException("password and confirm password fields are not the same");
 
         user.setPassword(passwordEncoder.encode(resetPasswordDto.getPassword()));
         user.setCode(null);

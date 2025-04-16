@@ -46,17 +46,17 @@ public class User implements UserDetails {
     @NotNull(message = "password is required")
     private String password;
 
-    @Column(name = "verfication_code", nullable = true)
-    private Long code;
+    @Column(name = "verfication_code")
+    private Long code = 0L;
 
-    @Column(name = "code_expiry_date", nullable = true)
+    @Column(name = "code_expiry_date")
     private Date codeExpiryDate;
 
-    private boolean verified;
+    private boolean verified = false;
 
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -75,7 +75,7 @@ public class User implements UserDetails {
     private List<Category> categories;
 
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

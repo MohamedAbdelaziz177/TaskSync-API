@@ -14,6 +14,7 @@ import com.SpringProj.todo.Services.Jwt.JwtService;
 import com.SpringProj.todo.Services.Mail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -65,6 +66,12 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthResponse register(RegisterDto registerDto) {
 
+            Optional<User> user1 = userRepository.findByEmail(registerDto.getEmail());
+
+            if(user1.isPresent())
+                throw new AuthenticationServiceException("User already exists");
+
+
             User user = User.builder()
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
@@ -73,9 +80,10 @@ public class AuthServiceImpl implements AuthService {
                     .roles(new ArrayList<>())
                     .build();
 
-            sendOtpToUser(registerDto.getEmail());
 
             userRepository.save(user);
+
+            sendOtpToUser(registerDto.getEmail());
 
             return AuthResponse.builder()
                     .message("User Registered Successfully - plz check ur email for confirmation")
@@ -105,9 +113,13 @@ public class AuthServiceImpl implements AuthService {
 
         Long otp = generateOtp();
         mailService.sendSimpleMail(user.getEmail(), "Confirmation Code", otp.toString());
+
         user.setCode(otp);
         user.setCodeExpiryDate(new Date(System.currentTimeMillis() + 86400000));
         user.setVerified(false);
+
+        //متنساش تسيف بعد كدا الله يرضى عنك
+        userRepository.save(user);
     }
 
     public void sendOtpToUser(String email){
@@ -121,12 +133,13 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(confirmEmailDto.getEmail()).orElseThrow(() ->
                 new NoSuchElementException("No such user found"));
 
+
         if(!user.getCode().equals(confirmEmailDto.getOtp()) ||
                 user.getCodeExpiryDate().getTime() < System.currentTimeMillis())
             throw new CodeNotValidException("Code not valid");
 
         user.setVerified(true);
-        user.setCode(null);
+        user.setCode(0L);
 
         userRepository.save(user);
     }
@@ -136,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(resetPasswordDto.getEmail()).orElseThrow(() ->
                 new NoSuchElementException("No such user found"));
 
-        if(!user.getCode().equals(resetPasswordDto.getOtp()) ||
+        if((!Objects.equals(user.getCode(), resetPasswordDto.getOtp())) ||
                 user.getCodeExpiryDate().getTime() < System.currentTimeMillis())
             throw new CodeNotValidException("Code not valid");
 
@@ -145,7 +158,7 @@ public class AuthServiceImpl implements AuthService {
             throw new PasswordsNotMatchedException("password and confirm password fields are not the same");
 
         user.setPassword(passwordEncoder.encode(resetPasswordDto.getPassword()));
-        user.setCode(null);
+        user.setCode(0L);
 
         userRepository.save(user);
 

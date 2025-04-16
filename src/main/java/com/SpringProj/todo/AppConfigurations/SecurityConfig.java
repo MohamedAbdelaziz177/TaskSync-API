@@ -37,6 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(reqs -> reqs
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/confirm-email").permitAll()
+                        .requestMatchers("/api/auth/resend-confirmation-code").permitAll()
                       //  .requestMatchers(HttpMethod.GET, "/api/demo/sayHello").permitAll()
                         .anyRequest().authenticated()
 

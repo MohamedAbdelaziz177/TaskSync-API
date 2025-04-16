@@ -13,6 +13,7 @@ import com.SpringProj.todo.Services.Auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -26,7 +27,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> Register(@RequestBody RegisterDto registerDto) {
+     public ResponseEntity<AuthResponse> Register(@RequestBody RegisterDto registerDto) {
 
         try{
 
@@ -36,6 +37,15 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
 
             return ResponseEntity.status(HttpStatus.OK).body(authResponse);
+        }
+        catch (AuthenticationServiceException e)
+        {
+            AuthResponse authResponse = AuthResponse.builder()
+                    .message(e.getMessage())
+                    .isAuthenticated(false)
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
         }
         catch (Exception e)
         {
@@ -85,7 +95,6 @@ public class AuthController {
 
     }
 
-    // Refresh token
 
     @GetMapping("/refresh-token")
     public ResponseEntity<TokenResponse> RefreshToken() {
@@ -159,8 +168,8 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/resend-confirmation-code")
-    public ResponseEntity<ApiResponse<String>> ResendConfirmationCode(@RequestBody String email) {
+    @GetMapping("/resend-confirmation-code")
+    public ResponseEntity<ApiResponse<String>> ResendConfirmationCode(@RequestParam String email /*must be in req body*/) {
 
         ApiResponse<String> res = new ApiResponse<>();
 

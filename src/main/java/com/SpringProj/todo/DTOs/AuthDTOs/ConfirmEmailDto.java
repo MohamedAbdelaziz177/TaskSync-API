@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConfirmEmailDto {
 
-    @NotNull
+    //@NotNull
     private String email;
 
-    @NotNull
+    //@NotNull
     private Long otp;
 }

@@ -13,7 +13,7 @@ public interface CategoryService {
     List<String> getAllCategories();
     List<Task> getAllTasksByCategory(Long id);
     void deleteUserCategory(User user, Long categoryId);
-    void deleteRepository(Long id);
+    void deleteCategory(Long id);
 
 
 }

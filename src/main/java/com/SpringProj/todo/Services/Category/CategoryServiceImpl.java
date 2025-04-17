@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +36,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category1 = new Category();
         category1.setCategory(category);
 
+        Optional<Category> checkExist = categoryRepository.findByCategory(category);
+
+        if(checkExist.isEmpty())
+            this.addCategory(category);
+
         user.getCategories().add(category1);
 
-        categoryRepository.save(category1);
         userRepository.save(user);
     }
 
@@ -81,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
         userRepository.save(user);
     }
 
-    public void deleteRepository(Long id)
+    public void deleteCategory(Long id)
     {
         Category category = categoryRepository.findById(id).orElseThrow(()->
                 new EntityNotFoundException("Category not found"));

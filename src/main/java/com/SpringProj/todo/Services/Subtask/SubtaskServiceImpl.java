@@ -16,6 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Data
@@ -113,10 +114,8 @@ public class SubtaskServiceImpl implements SubtaskService {
         SubTask subTask = subTaskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Subtask is not found"));
 
-        if(subTask.getTask().getUser() == user)
-            return true;
+        return Objects.equals(subTask.getTask().getUser().getId(), user.getId());
 
-        return false;
     }
 
 

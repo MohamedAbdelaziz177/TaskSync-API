@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Task not found"));
 
-        if(task.getUser() == user)
+        if(Objects.equals(task.getUser().getId(), user.getId()))
             taskRepository.delete(task);
 
         else throw new AccessDeniedException("You cannot delete this task");
@@ -83,7 +84,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Task not found"));
 
-        if(task.getUser() != user)
+        if(Objects.equals(task.getUser().getId(), user.getId()))
             throw new AccessDeniedException("You cannot Edit this task");
 
         task.setPriority(TaskPriority.valueOf(taskUpdateDto.getPriority()));
@@ -104,7 +105,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Task not found"));
 
-        if(task.getUser() != user)
+        if(Objects.equals(task.getUser().getId(), user.getId()))
             throw new AccessDeniedException("You cannot Get this task");
 
         return task;

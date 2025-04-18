@@ -2,6 +2,7 @@ package com.SpringProj.todo.AppConfigurations;
 
 import com.SpringProj.todo.Filters.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -32,6 +33,17 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+    @Value("${oauth.google.client-id}")
+    private String googleClientId;
+
+    @Value("${oauth.google.client-secret}")
+    private String googleClientSecret;
+
+    @Value("${oauth.github.client-id}")
+    private String githubClientId;
+
+    @Value("${oauth.github.client-secret}")
+    private String githubClientSecret;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -99,15 +111,15 @@ public class SecurityConfig {
     private ClientRegistration googleClientRegistration() {
         return CommonOAuth2Provider
                 .GOOGLE.getBuilder("google")
-                .clientId("909998816664-62t4b6uel3vtscmb720jck8js54dinjl.apps.googleusercontent.com")
-                .clientSecret("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").build();
+                .clientId(googleClientId)
+                .clientSecret(googleClientSecret).build();
     }
 
     private ClientRegistration githubClientRegistration() {
 
         return CommonOAuth2Provider.GITHUB.getBuilder("github")
-                .clientId("Ov23liInL0K0p9W2VoVk")
-                .clientSecret("398a53bb5ae1b400005542c4e90bd6a29c6789e8").build();
+                .clientId(githubClientId)
+                .clientSecret(githubClientSecret).build();
     }
 
 

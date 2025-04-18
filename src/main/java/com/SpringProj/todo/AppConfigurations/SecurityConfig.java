@@ -13,9 +13,13 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -43,6 +47,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
 
                 )
+                .formLogin(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
+                .oauth2Client(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -69,6 +76,38 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(authenticationProvider());
+    }
+
+    @Bean
+    ClientRegistrationRepository clientRegistrationRepository()
+    {
+        ClientRegistration github = githubClientRegistration();
+        //ClientRegistration facebook = facebookClientRegistration();
+        ClientRegistration google = googleClientRegistration();
+
+        return new InMemoryClientRegistrationRepository(github, google);
+    }
+
+     //private ClientRegistration facebookClientRegistration() {
+ //
+     //    return CommonOAuth2Provider
+     //            .FACEBOOK.getBuilder("facebook")
+     //            .clientId("")
+     //            .clientSecret("").build();
+     //}
+
+    private ClientRegistration googleClientRegistration() {
+        return CommonOAuth2Provider
+                .GOOGLE.getBuilder("google")
+                .clientId("909998816664-62t4b6uel3vtscmb720jck8js54dinjl.apps.googleusercontent.com")
+                .clientSecret("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").build();
+    }
+
+    private ClientRegistration githubClientRegistration() {
+
+        return CommonOAuth2Provider.GITHUB.getBuilder("github")
+                .clientId("Ov23liInL0K0p9W2VoVk")
+                .clientSecret("398a53bb5ae1b400005542c4e90bd6a29c6789e8").build();
     }
 
 

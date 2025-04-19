@@ -7,12 +7,14 @@ import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
 import com.SpringProj.todo.Responses.TokenResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthService {
 
-    AuthResponse login(LoginDto loginDto);
+    AuthResponse login(HttpServletResponse response, LoginDto loginDto);
     AuthResponse register(RegisterDto registerDto);
-    TokenResponse refreshToken(String refreshToken);
+    TokenResponse refreshToken(HttpServletRequest request, HttpServletResponse response);
     void sendOtpToUser(User user);
     void confirmEmail(ConfirmEmailDto confirmEmailDto);
     void resetPassword(ResetPasswordDto resetPasswordDto);

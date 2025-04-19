@@ -10,6 +10,8 @@ import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
 import com.SpringProj.todo.Responses.TokenResponse;
 import com.SpringProj.todo.Services.Auth.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,16 +63,14 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> Login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<AuthResponse> Login(HttpServletResponse response, @RequestBody LoginDto loginDto) {
 
         try {
 
-            AuthResponse authResponse = authService.login(loginDto);
+            AuthResponse authResponse = authService.login(response, loginDto);
 
             if(!authResponse.isAuthenticated())
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
-
-
 
             return ResponseEntity.status(HttpStatus.OK).body(authResponse);
         }
@@ -97,12 +97,13 @@ public class AuthController {
 
 
     @GetMapping("/refresh-token")
-    public ResponseEntity<TokenResponse> RefreshToken() {
+    public ResponseEntity<TokenResponse> RefreshToken(HttpServletRequest request, HttpServletResponse response) {
 
         try{
 
             // get Ref token from cookie / authHeader / Request param
-            TokenResponse tokenResponse =  authService.refreshToken("ref-token");
+
+            TokenResponse tokenResponse =  authService.refreshToken(request, response);
             return ResponseEntity.status(HttpStatus.OK).body(tokenResponse);
         }
         catch (NoSuchElementException e)

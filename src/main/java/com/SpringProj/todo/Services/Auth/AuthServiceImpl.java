@@ -12,6 +12,9 @@ import com.SpringProj.todo.Repository.UserRepository;
 import com.SpringProj.todo.Responses.TokenResponse;
 import com.SpringProj.todo.Services.Jwt.JwtService;
 import com.SpringProj.todo.Services.Mail.MailService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -37,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public AuthResponse login(LoginDto loginDto) {
+    public AuthResponse login(HttpServletResponse response, LoginDto loginDto) {
 
             Authentication authToken =
                     new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -52,6 +55,8 @@ public class AuthServiceImpl implements AuthService {
 
             //String token = jwtService.generateToken(user, new HashMap<>());
             TokenResponse tokenResponse = jwtService.getTokens(user);
+
+            setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());
 
             return AuthResponse.builder()
                     .token(tokenResponse.getAccessToken())
@@ -93,12 +98,16 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    public TokenResponse refreshToken(String refreshToken) {
+    public TokenResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
+
+            String refreshToken = getRefreshTokenFromCookie(request);
 
             TokenResponse tokenResponse =  jwtService.refreshToken(refreshToken);
 
             if(tokenResponse == null)
                 throw new NoSuchElementException("No such token found");
+
+            setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());
 
             return tokenResponse;
 
@@ -162,6 +171,27 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
+    }
+
+    private void setRefreshTokenInCookie(HttpServletResponse response, String refreshToken)
+    {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api/auth/refresh-token");
+        cookie.setMaxAge(3600 * 24 * 15);
+
+        response.addCookie(cookie);
+    }
+
+    private String getRefreshTokenFromCookie(HttpServletRequest request)
+    {
+        for(Cookie cookie : request.getCookies()) {
+            if(cookie.getName().equals("refreshToken")) {
+                return cookie.getValue();
+            }
+        }
+
+        return null;
     }
 
 

@@ -36,7 +36,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if("/api/auth/login".equals(request.getRequestURI()) ||
                 "/api/auth/register".equals(request.getRequestURI()) ||
                 "/api/auth/resend-confirmation-code".equals(request.getRequestURI()) ||
-                "/api/auth/confirm-email".equals(request.getRequestURI())
+                "/api/auth/confirm-email".equals(request.getRequestURI()) ||
+                "/api/auth/refresh-token".equals(request.getRequestURI())
 
         )
         {

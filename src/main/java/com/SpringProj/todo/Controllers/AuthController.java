@@ -116,6 +116,7 @@ public class AuthController {
         }
         catch (Exception e)
         {
+            System.out.println(e.getMessage());
             TokenResponse tokenResponse = TokenResponse.builder()
                     .success(false)
                     .build();

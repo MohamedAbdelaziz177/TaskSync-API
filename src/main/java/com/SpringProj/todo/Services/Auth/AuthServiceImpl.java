@@ -104,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
 
             TokenResponse tokenResponse =  jwtService.refreshToken(refreshToken);
 
-            if(tokenResponse == null)
+            if(!tokenResponse.isSuccess())
                 throw new NoSuchElementException("No such token found");
 
             setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());

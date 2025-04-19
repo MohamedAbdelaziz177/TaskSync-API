@@ -53,12 +53,16 @@ public class JwtService {
 
     public RefreshToken generateRefreshToken(Long userId){
 
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("User not found"));
+
         RefreshToken refreshToken = new RefreshToken();
 
         refreshToken.setToken(UUID.randomUUID().toString() + "_" + UUID.randomUUID().toString());
         refreshToken.setRevoked(false);
         refreshToken.setCreatedAt(new Date(System.currentTimeMillis()));
         refreshToken.setExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15));
+        refreshToken.setUser(user);
 
         refreshTokenRepository.save(refreshToken);
 

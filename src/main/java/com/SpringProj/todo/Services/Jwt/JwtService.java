@@ -34,7 +34,6 @@ public class JwtService {
         RefreshToken validToken = validateRefreshToken(tok);
 
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setSuccess(Boolean.TRUE);
 
         if (validToken == null) {
             tokenResponse.setSuccess(Boolean.FALSE);
@@ -44,8 +43,7 @@ public class JwtService {
             User user = validToken.getUser();
             String accessToken = generateToken(user, new HashMap<>());
 
-            tokenResponse.setAccessToken(accessToken);
-            tokenResponse.setRefreshToken(generateRefreshToken(user.getId()).getToken());
+            tokenResponse = getTokens(user);
 
             return tokenResponse;
 
@@ -86,6 +84,7 @@ public class JwtService {
 
         tokenResponse.setAccessToken(generateToken(user,new HashMap<>()));
         tokenResponse.setRefreshToken(generateRefreshToken(user.getId()).getToken());
+        tokenResponse.setSuccess(Boolean.TRUE);
 
         return tokenResponse;
     }

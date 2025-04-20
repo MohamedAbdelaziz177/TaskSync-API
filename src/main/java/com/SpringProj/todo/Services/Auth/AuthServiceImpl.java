@@ -4,6 +4,8 @@ import com.SpringProj.todo.DTOs.AuthDTOs.ConfirmEmailDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.ResetPasswordDto;
 import com.SpringProj.todo.Exceptions.CodeNotValidException;
 import com.SpringProj.todo.Exceptions.PasswordsNotMatchedException;
+import com.SpringProj.todo.Model.Role;
+import com.SpringProj.todo.Repository.RoleRepository;
 import com.SpringProj.todo.Responses.AuthResponse;
 import com.SpringProj.todo.DTOs.AuthDTOs.LoginDto;
 import com.SpringProj.todo.DTOs.AuthDTOs.RegisterDto;
@@ -39,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public AuthResponse login(HttpServletResponse response, LoginDto loginDto) {
 
@@ -76,13 +79,14 @@ public class AuthServiceImpl implements AuthService {
             if(user1.isPresent())
                 throw new AuthenticationServiceException("User already exists");
 
+            Role role = roleRepository.findByRole("ROLE_USER").orElseThrow();
 
             User user = User.builder()
                     .email(registerDto.getEmail())
                     .password(passwordEncoder.encode(registerDto.getPassword()))
                     .firstName(registerDto.getFirstName())
                     .lastName(registerDto.getLastName())
-                    .roles(new ArrayList<>())
+                    .roles(List.of(role))
                     .build();
 
 

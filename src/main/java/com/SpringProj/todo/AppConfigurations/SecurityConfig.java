@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/confirm-email").permitAll()
                         .requestMatchers("/api/auth/resend-confirmation-code").permitAll()
                         .requestMatchers("api/auth/refresh-token").permitAll()
-                      //  .requestMatchers(HttpMethod.GET, "/api/demo/sayHello").permitAll()
+                      //  .requestMatchers(HttpMethod.GET, "/api/demo/sayHello").hasRole();
                         .anyRequest().authenticated()
 
                 )

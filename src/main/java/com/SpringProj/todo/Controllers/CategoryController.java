@@ -1,13 +1,11 @@
 package com.SpringProj.todo.Controllers;
 
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskReadDto;
-import com.SpringProj.todo.Model.Category;
 import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Responses.ApiResponse;
 import com.SpringProj.todo.Services.Category.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

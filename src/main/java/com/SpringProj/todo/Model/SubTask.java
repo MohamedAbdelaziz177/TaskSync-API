@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @Entity
 @Table(name = "subtask")
 @Data
@@ -32,5 +34,8 @@ public class SubTask {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "subtask")
+    private List<SubtaskAttachment> subtaskAttachments;
 
 }

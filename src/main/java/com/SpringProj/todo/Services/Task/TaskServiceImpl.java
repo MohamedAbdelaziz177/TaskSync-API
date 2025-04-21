@@ -1,9 +1,7 @@
 package com.SpringProj.todo.Services.Task;
 
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskCreateDto;
-import com.SpringProj.todo.DTOs.TaskDTOs.TaskReadDto;
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskUpdateDto;
-import com.SpringProj.todo.Enums.SortType;
 import com.SpringProj.todo.Enums.TaskPriority;
 import com.SpringProj.todo.Enums.TaskStatus;
 import com.SpringProj.todo.Model.Category;
@@ -11,14 +9,11 @@ import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.CategoryRepository;
 import com.SpringProj.todo.Repository.TaskRepository;
-import com.SpringProj.todo.Responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

@@ -117,16 +117,12 @@ public class JwtService {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
     // Verify with takes SecretKey not Key :(
     public SecretKey getSecretKey(){
 
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 
     public Date getExpiry(){
         return new Date(System.currentTimeMillis() + 1000 * 60 * 15);

@@ -1,8 +1,5 @@
 package com.SpringProj.todo.DTOs.SubTaskDTOs;
 
-import com.SpringProj.todo.Enums.TaskStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

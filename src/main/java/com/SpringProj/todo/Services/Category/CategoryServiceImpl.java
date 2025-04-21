@@ -5,10 +5,8 @@ import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.CategoryRepository;
 import com.SpringProj.todo.Repository.UserRepository;
-import com.SpringProj.todo.Responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -4,8 +4,6 @@ package com.SpringProj.todo.Controllers;
 import com.SpringProj.todo.DTOs.SubTaskDTOs.SubTaskCreateDto;
 import com.SpringProj.todo.DTOs.SubTaskDTOs.SubTaskReadDto;
 import com.SpringProj.todo.DTOs.SubTaskDTOs.SubTaskUpdateDto;
-import com.SpringProj.todo.DTOs.TaskDTOs.TaskReadDto;
-import com.SpringProj.todo.DTOs.TaskDTOs.TaskUpdateDto;
 import com.SpringProj.todo.Model.SubTask;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Responses.ApiResponse;

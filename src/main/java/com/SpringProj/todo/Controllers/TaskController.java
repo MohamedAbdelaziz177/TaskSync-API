@@ -4,7 +4,6 @@ package com.SpringProj.todo.Controllers;
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskCreateDto;
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskReadDto;
 import com.SpringProj.todo.DTOs.TaskDTOs.TaskUpdateDto;
-import com.SpringProj.todo.Enums.TaskPriority;
 import com.SpringProj.todo.Enums.TaskStatus;
 import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/task")

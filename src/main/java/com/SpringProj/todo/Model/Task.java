@@ -1,14 +1,11 @@
 package com.SpringProj.todo.Model;
 
-import com.SpringProj.todo.DTOs.TaskDTOs.TaskCreateDto;
 import com.SpringProj.todo.Enums.TaskPriority;
 import com.SpringProj.todo.Enums.TaskStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -64,4 +61,7 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
+    private List<TaskAttachment> taskAttachments;
 }

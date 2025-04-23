@@ -40,12 +40,13 @@ public class JwtService {
             return tokenResponse;
         }
 
-            User user = validToken.getUser();
-            String accessToken = generateToken(user, new HashMap<>());
+        User user = validToken.getUser();
 
-            tokenResponse = getTokens(user);
+        validToken.setRevoked(true);
 
-            return tokenResponse;
+        tokenResponse = getTokens(user);
+
+        return tokenResponse;
 
     }
 

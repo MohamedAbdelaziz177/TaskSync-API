@@ -43,9 +43,10 @@ public class JwtService {
         User user = validToken.getUser();
 
         validToken.setRevoked(true);
-        refreshTokenRepository.save(validToken);
 
         tokenResponse = getTokens(user);
+
+        refreshTokenRepository.save(validToken);
 
         return tokenResponse;
 

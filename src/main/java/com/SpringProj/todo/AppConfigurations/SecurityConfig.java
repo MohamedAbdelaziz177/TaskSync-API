@@ -1,6 +1,7 @@
 package com.SpringProj.todo.AppConfigurations;
 
 import com.SpringProj.todo.Filters.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,10 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -35,15 +40,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
+        http.cors(cc -> cc.configurationSource(new CorsConfigurationSource() {
+
+            //For development env
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+
+                config.setAllowedOrigins(List.of("*"));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                config.setAllowCredentials(true);
+                config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+
+                return config;
+            }
+
+        }))
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(reqs -> reqs
-                        .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/confirm-email").permitAll()
-                        .requestMatchers("/api/auth/resend-confirmation-code").permitAll()
-                        .requestMatchers("api/auth/refresh-token").permitAll()
-                      //  .requestMatchers(HttpMethod.GET, "/api/demo/sayHello").hasRole();
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
 
                 )

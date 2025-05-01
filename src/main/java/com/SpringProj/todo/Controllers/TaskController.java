@@ -48,29 +48,12 @@ public class TaskController {
 
         ApiResponse<TaskReadDto> res = new ApiResponse<TaskReadDto>();
 
-        try {
+        Task task = taskService.getTask(id, user);
 
-            Task task = taskService.getTask(id, user);
+        res.setData(new TaskReadDto(task));
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(new TaskReadDto(task));
-            res.setSuccess(Boolean.TRUE);
-
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-        }
-        catch (EntityNotFoundException e) {
-
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
-
+        return ResponseEntity.status(HttpStatus.OK).body(res);
 
     }
 
@@ -81,26 +64,17 @@ public class TaskController {
     {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
-        try {
-            List<Task> tasks = taskService.getByCategoryId(categoryId, user);
+        List<Task> tasks = taskService.getByCategoryId(categoryId, user);
 
-            List<TaskReadDto> taskReadDtos = new ArrayList<>();
+        List<TaskReadDto> taskReadDtos = new ArrayList<>();
 
-            for(Task task : tasks)
-                taskReadDtos.add(new TaskReadDto(task));
+        for(Task task : tasks)
+            taskReadDtos.add(new TaskReadDto(task));
 
-            res.setSuccess(Boolean.TRUE);
-            res.setData(taskReadDtos);
+        res.setSuccess(Boolean.TRUE);
+        res.setData(taskReadDtos);
 
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-        }
-
-        catch (EntityNotFoundException e) {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(res);
 
     }
 
@@ -109,29 +83,18 @@ public class TaskController {
     {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
-        try{
+        List<Task> tasks = taskService.getByStatus(TaskStatus.valueOf(status), user);
 
-            List<Task> tasks = taskService.getByStatus(TaskStatus.valueOf(status), user);
+        List<TaskReadDto> taskReadDtos = new ArrayList<>();
 
-            List<TaskReadDto> taskReadDtos = new ArrayList<>();
+        for(Task task : tasks)
+            taskReadDtos.add(new TaskReadDto(task));
 
-            for(Task task : tasks)
-                taskReadDtos.add(new TaskReadDto(task));
+        res.setData(taskReadDtos);
+        res.setSuccess(Boolean.TRUE);
 
+        return ResponseEntity.ok(res);
 
-            res.setData(taskReadDtos);
-            res.setSuccess(Boolean.TRUE);
-
-            return ResponseEntity.ok(res);
-
-        }
-        catch (EntityNotFoundException e) {
-
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-        }
     }
 
     @PostMapping("/add")
@@ -140,24 +103,16 @@ public class TaskController {
     {
         ApiResponse<TaskReadDto> res = new ApiResponse<>();
 
-        try{
 
-            Task task = taskService.addTask(taskCreateDto, user);
+        Task task = taskService.addTask(taskCreateDto, user);
 
-            TaskReadDto taskReadDto = new TaskReadDto(task);
+        TaskReadDto taskReadDto = new TaskReadDto(task);
 
-            res.setData(taskReadDto);
-            res.setSuccess(Boolean.TRUE);
+        res.setData(taskReadDto);
+        res.setSuccess(Boolean.TRUE);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(res);
-        }
-        catch (IllegalArgumentException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-        }
     }
 
 
@@ -168,44 +123,23 @@ public class TaskController {
     {
         ApiResponse<TaskReadDto> res = new ApiResponse<>();
 
-        try {
+        Task task = taskService.updateTask(id, taskUpdateDto, user);
+        TaskReadDto taskReadDto = new TaskReadDto(task);
 
-            Task task = taskService.updateTask(id, taskUpdateDto, user);
-            TaskReadDto taskReadDto = new TaskReadDto(task);
+        res.setData(taskReadDto);
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(taskReadDto);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
 
-            return ResponseEntity.status(HttpStatus.OK).body(res);
-        }
-        catch (AccessDeniedException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
-        catch (EntityNotFoundException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable Long id, @AuthenticationPrincipal User user)
     {
-        try {
 
-            taskService.deleteTask(id, user);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        taskService.deleteTask(id, user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
@@ -215,55 +149,18 @@ public class TaskController {
             ,@AuthenticationPrincipal User user)
     {
         ApiResponse<TaskReadDto> res = new ApiResponse<>();
-        try {
-            TaskStatus ts;
 
-            try {
-                ts = TaskStatus.valueOf(status);
-            }
-           catch (IllegalArgumentException  e) {
+        TaskStatus ts;
+        ts = TaskStatus.valueOf(status);
 
-                throw new BadRequestException(e.getMessage());
-           }
+        Task task = taskService.changeStatus(id, ts, user);
+        TaskReadDto taskReadDto = new TaskReadDto(task);
 
-            Task task = taskService.changeStatus(id, ts, user);
+        res.setData(taskReadDto);
+        res.setSuccess(Boolean.TRUE);
 
-            TaskReadDto taskReadDto = new TaskReadDto(task);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
 
-            res.setData(taskReadDto);
-            res.setSuccess(Boolean.TRUE);
-
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
-        }
-        catch (EntityNotFoundException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
-
-        catch (BadRequestException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-        }
-
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.internalServerError().body(res);
-        }
 
     }
 

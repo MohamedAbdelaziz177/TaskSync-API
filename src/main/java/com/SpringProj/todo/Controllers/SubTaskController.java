@@ -28,32 +28,13 @@ public class SubTaskController {
     {
         ApiResponse<SubTaskReadDto> res = new ApiResponse<>();
 
-        try {
+        SubTask subTask = subtaskService.getById(id, user);
 
-            SubTask subTask = subtaskService.getById(id, user);
+        res.setData(new SubTaskReadDto(subTask));
+        res.setSuccess(true);
 
-            res.setData(new SubTaskReadDto(subTask));
-            res.setSuccess(true);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-
-        }
-        catch (AccessDeniedException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-
-        }
-
-        catch (EntityNotFoundException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
     }
 
     @GetMapping("/getByTaskId")
@@ -61,30 +42,11 @@ public class SubTaskController {
     {
         ApiResponse<SubTaskReadDto> res = new ApiResponse<>();
 
-        try {
+        SubTask subTask = subtaskService.getById(taskId, user);
+        res.setData(new SubTaskReadDto(subTask));
+        res.setSuccess(true);
 
-            SubTask subTask = subtaskService.getById(taskId, user);
-            res.setData(new SubTaskReadDto(subTask));
-            res.setSuccess(true);
-
-            return ResponseEntity.ok(res);
-
-        }
-        catch(EntityNotFoundException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
-
+        return ResponseEntity.ok(res);
 
     }
 
@@ -93,28 +55,11 @@ public class SubTaskController {
     {
         ApiResponse<SubTaskReadDto> res = new ApiResponse<>();
 
-        try {
+        subtaskService.addSubTask(subTaskCreateDto);
 
-            subtaskService.addSubTask(subTaskCreateDto);
+        res.setSuccess(true);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
 
-            res.setSuccess(true);
-            return ResponseEntity.status(HttpStatus.CREATED).body(res);
-
-        }
-        catch(EntityNotFoundException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
     }
 
     @PutMapping("/changeStatus/{id}")
@@ -123,25 +68,12 @@ public class SubTaskController {
     {
         ApiResponse<SubTaskReadDto> res = new ApiResponse<>();
 
-        try {
+        SubTask subTask = subtaskService.ChangeStatus(id, status, user);
+        res.setData(new SubTaskReadDto(subTask));
+        res.setSuccess(true);
 
-            SubTask subTask = subtaskService.ChangeStatus(id, status, user);
-            res.setData(new SubTaskReadDto(subTask));
-            res.setSuccess(true);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (EntityNotFoundException e) {
-
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
     }
 
     @PutMapping("/update/{id}")
@@ -151,27 +83,13 @@ public class SubTaskController {
     {
         ApiResponse<SubTaskReadDto> res = new ApiResponse<>();
 
-        try{
+        SubTask subtask = subtaskService.updateSubTask(id, subTaskUpdateDto, user);
 
-            SubTask subtask = subtaskService.updateSubTask(id, subTaskUpdateDto, user);
+        res.setData(new SubTaskReadDto(subtask));
+        res.setSuccess(true);
 
-            res.setData(new SubTaskReadDto(subtask));
-            res.setSuccess(true);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch(EntityNotFoundException e) {
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-        }
     }
 
 
@@ -180,23 +98,10 @@ public class SubTaskController {
     {
         ApiResponse<Void> res = new ApiResponse<>();
 
-        try {
-            subtaskService.deleteSubTask(id, user);
-            res.setSuccess(true);
-            return ResponseEntity.ok(res);
-        }
-        catch (EntityNotFoundException e) {
+        subtaskService.deleteSubTask(id, user);
+        res.setSuccess(true);
+        return ResponseEntity.ok(res);
 
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (AccessDeniedException e) {
-            res.setSuccess(false);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
-
-        }
     }
 
 }

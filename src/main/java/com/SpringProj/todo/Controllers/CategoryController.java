@@ -27,21 +27,13 @@ public class CategoryController {
     {
         ApiResponse<String> res = new ApiResponse<>();
 
-        try {
+        categoryService.addCategory(category);
 
-            categoryService.addCategory(category);
+        res.setSuccess(Boolean.TRUE);
+        res.setData(category + " added successfully");
 
-            res.setSuccess(Boolean.TRUE);
-            res.setData(category + " added successfully");
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @PostMapping("/assign-to-user")
@@ -49,21 +41,13 @@ public class CategoryController {
     {
         ApiResponse<String> res = new ApiResponse<>();
 
-        try {
-            categoryService.addUserCategory(user, category);
+        categoryService.addUserCategory(user, category);
 
-            res.setSuccess(Boolean.TRUE);
-            res.setData(category + " added successfully");
+        res.setSuccess(Boolean.TRUE);
+        res.setData(category + " added successfully");
 
-            return ResponseEntity.ok(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @GetMapping("/get-by-user")
@@ -71,21 +55,12 @@ public class CategoryController {
     {
         ApiResponse<List<String>> res = new ApiResponse<>();
 
-        try {
+        List<String> categories = categoryService.getUserCategories(user);
+        res.setData(categories);
+        res.setSuccess(Boolean.TRUE);
 
-            List<String> categories = categoryService.getUserCategories(user);
-            res.setData(categories);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @GetMapping("/get-all") // only for admins / analysis purposes for EX
@@ -93,57 +68,31 @@ public class CategoryController {
     {
         ApiResponse<List<String>> res = new ApiResponse<>();
 
-        try {
+        List<String> categories = categoryService.getAllCategories();
 
-            List<String> categories = categoryService.getAllCategories();
+        res.setData(categories);
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(categories);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @GetMapping("/get-tasks") // only for admins / analysis purposes for EX
-    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getAllTasksByCategory(Long id)
-    {
+    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getAllTasksByCategory(Long id) {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
-        try {
+        List<Task> tasks = categoryService.getAllTasksByCategory(id);
+        List<TaskReadDto> tasksDto = new ArrayList<>();
 
-            List<Task> tasks = categoryService.getAllTasksByCategory(id);
-            List<TaskReadDto> tasksDto = new ArrayList<>();
+        for (Task task : tasks)
+            tasksDto.add(new TaskReadDto(task));
 
-            for (Task task : tasks)
-                tasksDto.add(new TaskReadDto(task));
+        res.setData(tasksDto);
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(tasksDto);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
 
-        }
-        catch (EntityNotFoundException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @DeleteMapping("delete-user-category")
@@ -151,26 +100,11 @@ public class CategoryController {
     {
         ApiResponse<String> res = new ApiResponse<>();
 
-        try {
-            categoryService.deleteUserCategory(user, id);
-            res.setSuccess(Boolean.TRUE);
-            res.setData("Category deleted successfully");
-            return ResponseEntity.ok(res);
-        }
-        catch (EntityNotFoundException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
+        categoryService.deleteUserCategory(user, id);
+        res.setSuccess(Boolean.TRUE);
+        res.setData("Category deleted successfully");
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @DeleteMapping("delete-category")
@@ -178,28 +112,11 @@ public class CategoryController {
     {
         ApiResponse<String> res = new ApiResponse<>();
 
-        try {
+        categoryService.deleteCategory(id);
+        res.setSuccess(Boolean.TRUE);
+        res.setData("Category deleted successfully");
 
-            categoryService.deleteCategory(id);
-            res.setSuccess(Boolean.TRUE);
-            res.setData("Category deleted successfully");
-
-            return ResponseEntity.ok(res);
-        }
-        catch (EntityNotFoundException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
+        return ResponseEntity.ok(res);
 
     }
 

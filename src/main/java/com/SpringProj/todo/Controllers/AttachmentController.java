@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,32 +31,18 @@ public class AttachmentController {
     {
         ApiResponse<List<AttachmentReadDto>> res = new ApiResponse<>();
 
-        try {
+        List<TaskAttachment> attachments = attachmentService.getTaskAttachmentsByTaskId(taskId);
 
-            List<TaskAttachment> attachments = attachmentService.getTaskAttachmentsByTaskId(taskId);
+        List<AttachmentReadDto> attachmentReadDtos = new ArrayList<>();
 
-            List<AttachmentReadDto> attachmentReadDtos = new ArrayList<>();
+        for (TaskAttachment attachment : attachments)
+            attachmentReadDtos.add(new AttachmentReadDto(attachment));
 
-            for (TaskAttachment attachment : attachments)
-                attachmentReadDtos.add(new AttachmentReadDto(attachment));
+        res.setData(attachmentReadDtos);
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(attachmentReadDtos);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @GetMapping("/get-by-subtask-id")
@@ -63,88 +50,47 @@ public class AttachmentController {
     {
         ApiResponse<List<AttachmentReadDto>> res = new ApiResponse<>();
 
-        try {
+        List<SubtaskAttachment> attachments = attachmentService.getSubtaskAttachmentsBySubtaskId(subtaskId);
 
-            List<SubtaskAttachment> attachments = attachmentService.getSubtaskAttachmentsBySubtaskId(subtaskId);
+        List<AttachmentReadDto> attachmentReadDtos = new ArrayList<>();
 
-            List<AttachmentReadDto> attachmentReadDtos = new ArrayList<>();
+        for (SubtaskAttachment attachment : attachments)
+            attachmentReadDtos.add(new AttachmentReadDto(attachment));
 
-            for (SubtaskAttachment attachment : attachments)
-                attachmentReadDtos.add(new AttachmentReadDto(attachment));
+        res.setData(attachmentReadDtos);
+        res.setSuccess(Boolean.TRUE);
 
-            res.setData(attachmentReadDtos);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @PostMapping("/add-to-task")
     public ResponseEntity<ApiResponse<AttachmentReadDto>> addToTask(@RequestParam Long taskId,
                                                                     @RequestBody AttachmentCreateDto attachmentCreateDto)
+            throws IOException
     {
         ApiResponse<AttachmentReadDto> res = new ApiResponse<>();
 
-        try {
+        attachmentService.saveTaskAttachment(taskId, attachmentCreateDto);
+        res.setSuccess(Boolean.TRUE);
 
-            attachmentService.saveTaskAttachment(taskId, attachmentCreateDto);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @PostMapping("/add-to-subtask")
     public ResponseEntity<ApiResponse<AttachmentReadDto>> addToSubtask(@RequestParam Long subtaskId,
                                                                     @RequestBody AttachmentCreateDto attachmentCreateDto)
+            throws IOException
+
     {
         ApiResponse<AttachmentReadDto> res = new ApiResponse<>();
 
-        try {
+        attachmentService.saveSubTaskAttachment(subtaskId, attachmentCreateDto);
+        res.setSuccess(Boolean.TRUE);
 
-            attachmentService.saveSubTaskAttachment(subtaskId, attachmentCreateDto);
-            res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @DeleteMapping("/delete-taskAttachment-by-id/{id}")
@@ -152,26 +98,10 @@ public class AttachmentController {
     {
         ApiResponse<Void> res = new ApiResponse<>();
 
-        try {
+        attachmentService.deleteTaskAttachment(id);
+        res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            attachmentService.deleteTaskAttachment(id);
-            res.setSuccess(Boolean.TRUE);
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
     @DeleteMapping("/delete-subtaskAttachment-by-id/{id}")
@@ -179,26 +109,11 @@ public class AttachmentController {
     {
         ApiResponse<Void> res = new ApiResponse<>();
 
-        try {
+        attachmentService.deleteSubtaskAttachment(id);
 
-            attachmentService.deleteSubtaskAttachment(id);
-            res.setSuccess(Boolean.TRUE);
-            return ResponseEntity.ok(res);
-        }
-        catch (NoSuchElementException e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
+        res.setSuccess(Boolean.TRUE);
+        return ResponseEntity.ok(res);
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-        }
-        catch (Exception e)
-        {
-            res.setSuccess(Boolean.FALSE);
-            res.setMessage(e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
     }
 
 }

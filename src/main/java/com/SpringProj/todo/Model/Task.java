@@ -32,7 +32,8 @@ public class Task {
     @Length(min = 1, max = 50)
     private String title;
 
-    @Length(min = 10, max = 350)
+    //@Column(length = 300)
+    //@Length(min = 10, max = 250)
     private String description;
 
     @Column(name = "created_at")

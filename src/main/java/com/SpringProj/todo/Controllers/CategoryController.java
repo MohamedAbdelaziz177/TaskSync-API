@@ -23,7 +23,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/add") // only for admins / analysis purposes for EX
-    public ResponseEntity<ApiResponse<String>> addCategory(String category)
+    public ResponseEntity<ApiResponse<String>> addCategory(@RequestParam String category)
     {
         ApiResponse<String> res = new ApiResponse<>();
 
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping("/assign-to-user")
-    public ResponseEntity<ApiResponse<String>> addUserCategory(@AuthenticationPrincipal User user, String category)
+    public ResponseEntity<ApiResponse<String>> addUserCategory(@AuthenticationPrincipal User user, @RequestParam String category)
     {
         ApiResponse<String> res = new ApiResponse<>();
 
@@ -77,8 +77,8 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/get-tasks") // only for admins / analysis purposes for EX
-    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getAllTasksByCategory(Long id) {
+    @GetMapping("/get-tasks-by-category") // only for admins / analysis purposes for EX
+    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getAllTasksByCategory(@RequestParam Long id) {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
         List<Task> tasks = categoryService.getAllTasksByCategory(id);
@@ -95,8 +95,8 @@ public class CategoryController {
 
     }
 
-    @DeleteMapping("delete-user-category")
-    public ResponseEntity<ApiResponse<String>> deleteUserCategory(@AuthenticationPrincipal User user, Long id)
+    @DeleteMapping("delete-user-category/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteUserCategory(@AuthenticationPrincipal User user, @PathVariable Long id)
     {
         ApiResponse<String> res = new ApiResponse<>();
 
@@ -107,8 +107,8 @@ public class CategoryController {
 
     }
 
-    @DeleteMapping("delete-category")
-    public ResponseEntity<ApiResponse<String>> deleteCategory(@AuthenticationPrincipal User user, Long id)
+    @DeleteMapping("delete-category/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteCategory(@AuthenticationPrincipal User user, @PathVariable Long id)
     {
         ApiResponse<String> res = new ApiResponse<>();
 

@@ -9,6 +9,7 @@ import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.CategoryRepository;
 import com.SpringProj.todo.Repository.TaskRepository;
+import com.SpringProj.todo.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,6 +25,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public Task addTask(TaskCreateDto taskCreateDto, User user)
     {
@@ -32,6 +34,8 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Category> category = categoryRepository.findById(taskCreateDto.getCategoryId());
 
+        Optional<User> managedUser = userRepository.findById(user.getId());
+
         if(category.isEmpty())
             throw new IllegalArgumentException("Category not found");
 
@@ -39,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
         task.setPriority(TaskPriority.valueOf(taskCreateDto.getPriority()));
         task.setStatus(TaskStatus.valueOf(taskCreateDto.getStatus()));
         task.setDescription(taskCreateDto.getDescription());
-        task.setUser(user);
+        task.setUser(managedUser.get());
         task.setDeadline(taskCreateDto.getDeadline());
         task.setTitle(taskCreateDto.getTitle());
         task.setCategory(category.get());

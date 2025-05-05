@@ -79,7 +79,7 @@ public class TaskController {
     }
 
     @GetMapping("/getByStatus")
-    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getByStatus(@AuthenticationPrincipal User user, String status)
+    public ResponseEntity<ApiResponse<List<TaskReadDto>>> getByStatus(@AuthenticationPrincipal User user,@RequestParam String status)
     {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
@@ -101,8 +101,8 @@ public class TaskController {
     public ResponseEntity<ApiResponse<TaskReadDto>> addTask(@RequestBody TaskCreateDto taskCreateDto,
                                            @AuthenticationPrincipal User user)
     {
-        ApiResponse<TaskReadDto> res = new ApiResponse<>();
 
+        ApiResponse<TaskReadDto> res = new ApiResponse<>();
 
         Task task = taskService.addTask(taskCreateDto, user);
 
@@ -117,7 +117,7 @@ public class TaskController {
 
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<TaskReadDto>> updateTask(@RequestParam Long id,
+    public ResponseEntity<ApiResponse<TaskReadDto>> updateTask(@PathVariable Long id,
                                                   @RequestBody TaskUpdateDto taskUpdateDto,
                                                   @AuthenticationPrincipal User user)
     {

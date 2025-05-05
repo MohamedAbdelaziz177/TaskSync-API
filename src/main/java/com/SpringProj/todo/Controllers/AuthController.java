@@ -50,6 +50,7 @@ public class AuthController {
         }
         catch (Exception e)
         {
+            System.out.println(e.getMessage());
             AuthResponse authResponse = AuthResponse.builder()
                     .message(e.getMessage())
                     .isAuthenticated(false)
@@ -169,7 +170,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/resend-confirmation-code")
+    @PostMapping("/resend-confirmation-code")
     public ResponseEntity<ApiResponse<String>> ResendConfirmationCode(@RequestParam String email /*must be in req body*/) {
 
         ApiResponse<String> res = new ApiResponse<>();

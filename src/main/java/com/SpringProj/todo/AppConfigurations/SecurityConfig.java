@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -51,6 +52,7 @@ public class SecurityConfig {
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                 config.setAllowCredentials(true);
                 config.setExposedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                config.setMaxAge(Duration.ofDays(36));
 
                 return config;
             }
@@ -63,8 +65,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
 
                 )
-                .formLogin(Customizer.withDefaults())
-                .oauth2Login(Customizer.withDefaults())
+               // .oauth2Login(Customizer.withDefaults())
                 .oauth2Client(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

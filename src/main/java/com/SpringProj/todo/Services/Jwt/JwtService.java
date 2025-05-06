@@ -28,6 +28,9 @@ public class JwtService {
     final private RefreshTokenRepository refreshTokenRepository;
     final private UserRepository userRepository;
 
+    @Value("${app.env}")
+    private String APP_ENV;
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -133,7 +136,11 @@ public class JwtService {
     }
 
     public Date getExpiry(){
-        return new Date(System.currentTimeMillis() + 1000 * 60 * 15);
+
+        long min = 1000 * 60 * 15;
+
+        return (APP_ENV.equalsIgnoreCase("production"))?
+                new Date(System.currentTimeMillis() + min * 15) : new Date(System.currentTimeMillis() + min * 60 * 24);
     }
 
     public boolean isExpired(String token) {

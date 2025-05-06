@@ -18,6 +18,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    @Value("${app.env}")
+    private String APP_ENV;
+
     public AuthResponse login(HttpServletResponse response, LoginDto loginDto) {
 
             Authentication authToken =
@@ -54,7 +58,13 @@ public class AuthServiceImpl implements AuthService {
             User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
                     new NoSuchElementException("No such user found"));
 
-            //String token = jwtService.generateToken(user, new HashMap<>());
+            if(APP_ENV.equalsIgnoreCase("production"))
+                if(!user.isVerified())
+                    return AuthResponse.builder()
+                            .message("Please verify your email")
+                            .isAuthenticated(false).build();
+
+
             TokenResponse tokenResponse = jwtService.getTokens(user);
 
             setRefreshTokenInCookie(response, tokenResponse.getRefreshToken());

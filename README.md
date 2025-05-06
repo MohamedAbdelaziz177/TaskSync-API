@@ -8,7 +8,8 @@
 A **Spring Boot** REST API for managing tasks with **subtasks, attachments, and categories**, secured with **JWT, OAuth2, and email verification**.  
 
 ## ✨ Features  
-✅ **Task & Subtask Management** – Organize tasks hierarchically  
+✅ **Task** - Create, read, update, and delete tasks  
+✅ **Subtask Management** – Break down tasks into manageable subtasks
 📎 **File Attachments** – Add documents to tasks or subtasks  
 🗂 **Custom Categories** – Group tasks by user-defined labels  
 🔐 **Secure Auth** – JWT, Refresh Tokens, OAuth2 (Google, etc.)  

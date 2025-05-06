@@ -15,7 +15,7 @@ A **Spring Boot** REST API for managing tasks with **subtasks, attachments, and 
 ✉️ **Email Verification & Password Reset**  
 
 ## 🛠 Tech Stack  
-- **Backend**: Spring Boot, Spring Security, JPA  
+- **Backend**: Spring Boot, Spring Security, Spring Data JPA  
 - **Database**: MySQL  
 - **Auth**: JWT, OAuth2  
 - **Tools**: Lombok, Maven  

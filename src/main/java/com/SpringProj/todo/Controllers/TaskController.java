@@ -83,7 +83,7 @@ public class TaskController {
     {
         ApiResponse<List<TaskReadDto>> res = new ApiResponse<>();
 
-        List<Task> tasks = taskService.getByStatus(TaskStatus.valueOf(status), user);
+        List<Task> tasks = taskService.getByStatus(TaskStatus.valueOf(status.toUpperCase()), user);
 
         List<TaskReadDto> taskReadDtos = new ArrayList<>();
 

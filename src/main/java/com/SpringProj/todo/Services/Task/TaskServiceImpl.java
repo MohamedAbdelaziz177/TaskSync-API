@@ -27,6 +27,11 @@ public class TaskServiceImpl implements TaskService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
+    private Optional<User> getManagedUser(User user)
+    {
+        return userRepository.findById(user.getId());
+    }
+
     public Task addTask(TaskCreateDto taskCreateDto, User user)
     {
 
@@ -34,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Category> category = categoryRepository.findById(taskCreateDto.getCategoryId());
 
-        Optional<User> managedUser = userRepository.findById(user.getId());
+        Optional<User> managedUser = getManagedUser(user);
 
         if(category.isEmpty())
             throw new IllegalArgumentException("Category not found");
@@ -54,10 +59,13 @@ public class TaskServiceImpl implements TaskService {
 
     public void deleteTask(Long id, User user) {
 
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
         Task task = taskRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Task not found"));
 
-        if(Objects.equals(task.getUser().getId(), user.getId()))
+        if(Objects.equals(task.getUser().getId(), managedUser.getId()))
             taskRepository.delete(task);
 
         else throw new AccessDeniedException("You cannot delete this task");
@@ -65,10 +73,13 @@ public class TaskServiceImpl implements TaskService {
 
     public Task changeStatus(Long id, TaskStatus newStatus, User user) {
 
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
         Task task = taskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Task not found"));
 
-        if(task.getUser() != user)
+        if(!Objects.equals(task.getUser().getId(), managedUser.getId()))
             throw new AccessDeniedException("You cannot Edit this task");
 
         task.setStatus(newStatus);
@@ -80,17 +91,21 @@ public class TaskServiceImpl implements TaskService {
 
     public Task updateTask(Long id, TaskUpdateDto taskUpdateDto, User user) {
 
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
         Task task = taskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Task not found"));
 
-        if(Objects.equals(task.getUser().getId(), user.getId()))
+        if(!Objects.equals(task.getUser().getId(), managedUser.getId()))
             throw new AccessDeniedException("You cannot Edit this task");
 
-        task.setPriority(TaskPriority.valueOf(taskUpdateDto.getPriority()));
-        task.setStatus(TaskStatus.valueOf(taskUpdateDto.getStatus()));
+        task.setPriority(TaskPriority.valueOf(taskUpdateDto.getPriority().toUpperCase()));
+        task.setStatus(TaskStatus.valueOf(taskUpdateDto.getStatus().toUpperCase()));
         task.setDescription(taskUpdateDto.getDescription());
         task.setTitle(taskUpdateDto.getTitle());
         task.setStatus(TaskStatus.valueOf(taskUpdateDto.getStatus()));
+        task.setDeadline(task.getDeadline());
 
 
         taskRepository.save(task);
@@ -101,10 +116,13 @@ public class TaskServiceImpl implements TaskService {
 
     public Task getTask(Long id, User user) {
 
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
         Task task = taskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Task not found"));
 
-        if(Objects.equals(task.getUser().getId(), user.getId()))
+        if(!Objects.equals(task.getUser().getId(), managedUser.getId()))
             throw new AccessDeniedException("You cannot Get this task");
 
         return task;
@@ -112,7 +130,10 @@ public class TaskServiceImpl implements TaskService {
 
     public List<Task> getByStatus(TaskStatus status, User user) {
 
-        List<Task> tasks = taskRepository.findByUser_IdAndStatus(user.getId(), status).orElseThrow(
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
+        List<Task> tasks = taskRepository.findByUser_IdAndStatus(managedUser.getId(), status).orElseThrow(
                 () -> new EntityNotFoundException("Task not found"));
 
         return tasks;
@@ -120,7 +141,10 @@ public class TaskServiceImpl implements TaskService {
 
     public List<Task> getByCategoryId(Long categoryId, User user) {
 
-        List<Task> tasks = taskRepository.findByUser_IdAndCategory_Id(user.getId(), categoryId).orElseThrow(
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
+
+        List<Task> tasks = taskRepository.findByUser_IdAndCategory_Id(managedUser.getId(), categoryId).orElseThrow(
                 () -> new EntityNotFoundException("Task not found"));
 
         return tasks;

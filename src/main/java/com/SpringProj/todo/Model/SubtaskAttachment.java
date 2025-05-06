@@ -21,7 +21,7 @@ public class SubtaskAttachment extends Attachment{
     // @Column(name = "subtask_id")  // Need to be experienced
     // private Long subtaskId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "subtask_id")
     private SubTask subtask;
 }

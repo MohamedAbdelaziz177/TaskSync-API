@@ -35,7 +35,7 @@ public class SubTask {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "subtask")
+    @OneToMany(mappedBy = "subtask")
     private List<SubtaskAttachment> subtaskAttachments;
 
 }

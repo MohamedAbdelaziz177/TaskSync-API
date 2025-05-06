@@ -33,7 +33,7 @@ public class Task {
     private String title;
 
     //@Column(length = 300)
-    //@Length(min = 10, max = 250)
+    @Length(min = 10, max = 250)
     private String description;
 
     @Column(name = "created_at")
@@ -51,18 +51,18 @@ public class Task {
     @NotNull
     private TaskPriority priority;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
+    @OneToMany(mappedBy = "task")
     private List<SubTask> subTasks;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     private  Category category;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
+    @OneToMany(mappedBy = "task")
     private List<TaskAttachment> taskAttachments;
 }

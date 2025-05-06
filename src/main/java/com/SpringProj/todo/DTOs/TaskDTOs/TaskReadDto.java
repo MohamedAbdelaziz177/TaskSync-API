@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class TaskReadDto {
         this.priority = task.getPriority().toString();
         this.status = task.getStatus().toString();
         this.category = task.getCategory().getCategory();
+        this.deadline = task.getDeadline();
+
     }
 
     private Long id;
@@ -30,6 +34,8 @@ public class TaskReadDto {
     private String status;
 
     private String category;
+
+    private Date deadline;
 
 
 }

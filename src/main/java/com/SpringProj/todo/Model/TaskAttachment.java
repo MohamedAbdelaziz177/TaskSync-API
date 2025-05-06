@@ -18,7 +18,7 @@ public class TaskAttachment extends Attachment{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "task_id")
     private Task task;
 }

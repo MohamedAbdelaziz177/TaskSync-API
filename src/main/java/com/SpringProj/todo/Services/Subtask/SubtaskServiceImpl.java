@@ -8,6 +8,7 @@ import com.SpringProj.todo.Model.Task;
 import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.SubTaskRepository;
 import com.SpringProj.todo.Repository.TaskRepository;
+import com.SpringProj.todo.Repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Data
@@ -26,6 +28,7 @@ public class SubtaskServiceImpl implements SubtaskService {
 
     private final SubTaskRepository subTaskRepository;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     public SubTask getById(Long id, User user)
     {
@@ -80,6 +83,7 @@ public class SubtaskServiceImpl implements SubtaskService {
         return subTaskRepository.save(subTask);
     }
 
+    @Transactional
     public void deleteSubTask(Long id, User user)
     {
         if(!checkAuthorized(id, user))
@@ -114,8 +118,16 @@ public class SubtaskServiceImpl implements SubtaskService {
         SubTask subTask = subTaskRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Subtask is not found"));
 
-        return Objects.equals(subTask.getTask().getUser().getId(), user.getId());
+        User managedUser = getManagedUser(user).orElseThrow(() ->
+                new AccessDeniedException("User not found"));
 
+        return Objects.equals(subTask.getTask().getUser().getId(), managedUser.getId());
+
+    }
+
+    private Optional<User> getManagedUser(User user)
+    {
+        return userRepository.findById(user.getId());
     }
 
 

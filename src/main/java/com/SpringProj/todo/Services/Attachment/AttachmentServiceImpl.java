@@ -60,10 +60,11 @@ public class AttachmentServiceImpl implements AttachmentService {
         taskAttachment.setFilePath(path);
         taskAttachment.setFileName(fileName);
 
-        //--------------------------to approaches which each has it's pros & cons-------------------------------//
-        // taskAttachmentRepository.save(taskAttachment);
-        task.getTaskAttachments().add(taskAttachment);
-        taskRepository.save(task);
+        //--------------------------two approaches which each has its pros & cons-------------------------------//
+        taskAttachmentRepository.save(taskAttachment);
+
+        //task.getTaskAttachments().add(taskAttachment);
+        //taskRepository.save(task);
     }
 
     public void saveSubTaskAttachment(Long taskId, AttachmentCreateDto attachment) throws IOException {
@@ -82,13 +83,15 @@ public class AttachmentServiceImpl implements AttachmentService {
         subTaskAttachment.setFilePath(path);
         subTaskAttachment.setFileName(fileName);
 
-        subTask.getSubtaskAttachments().add(subTaskAttachment);
-        subTaskRepository.save(subTask);
+        subtaskAttachmentRepository.save(subTaskAttachment);
+
+        //subTask.getSubtaskAttachments().add(subTaskAttachment);
+        //subTaskRepository.save(subTask);
     }
 
     public List<TaskAttachment> getTaskAttachmentsByTaskId(Long taskId) {
 
-        return taskAttachmentRepository.findByTaskId(taskId).orElseThrow(() ->
+        return taskAttachmentRepository.findByTask_Id(taskId).orElseThrow(() ->
                 new NoSuchElementException("Task not found"));
     }
 

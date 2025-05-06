@@ -66,7 +66,7 @@ public class AttachmentController {
 
     @PostMapping("/add-to-task")
     public ResponseEntity<ApiResponse<AttachmentReadDto>> addToTask(@RequestParam Long taskId,
-                                                                    @RequestBody AttachmentCreateDto attachmentCreateDto)
+                                                                    @ModelAttribute AttachmentCreateDto attachmentCreateDto)
             throws IOException
     {
         ApiResponse<AttachmentReadDto> res = new ApiResponse<>();
@@ -80,7 +80,7 @@ public class AttachmentController {
 
     @PostMapping("/add-to-subtask")
     public ResponseEntity<ApiResponse<AttachmentReadDto>> addToSubtask(@RequestParam Long subtaskId,
-                                                                    @RequestBody AttachmentCreateDto attachmentCreateDto)
+                                                                       @ModelAttribute AttachmentCreateDto attachmentCreateDto)
             throws IOException
 
     {

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface TaskAttachmentRepository extends JpaRepository<TaskAttachment, Long> {
 
-    Optional<List<TaskAttachment>> findByTaskId(Long id);
+    Optional<List<TaskAttachment>> findByTask_Id(Long id);
 }

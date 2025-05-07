@@ -21,6 +21,14 @@ A **Spring Boot** REST API for managing tasks with **subtasks, attachments, and 
 - **Auth**: JWT, OAuth2  
 - **Tools**: Lombok, Maven  
 
+## 🗃 Database Schema
+Here is the visual representation of the database schema:
+![Database Schema](DATABASE_SCHEMEA)
+
+## 🧪 Endpoints
+Interactive API documentation powered by Swagger:  
+![Swagger UI](ENDPOINTS)
+
 ## 🚀 Quick Start  
 1. Clone & configure `application.properties`  
 2. Run:  

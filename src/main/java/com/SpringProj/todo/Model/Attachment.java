@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @MappedSuperclass
 @Data
-public  class Attachment {
+public abstract class Attachment {
 
     @NotBlank(message = "fileName cannot be empty")
     protected String fileName;

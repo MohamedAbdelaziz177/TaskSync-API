@@ -34,4 +34,6 @@ Interactive API documentation powered by Swagger:
 2. Run:  
 ```bash 
 mvn clean install  
-mvn spring-boot:run  
+mvn spring-boot:run
+![TaskSync Logo](https://raw.githubusercontent.com/MohamedAbdelaziz177/TaskSync-API/main/logo.png)
+

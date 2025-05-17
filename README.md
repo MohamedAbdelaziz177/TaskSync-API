@@ -31,7 +31,7 @@ Interactive API documentation powered by Swagger:
 
 ## 🚀 Quick Start  
 
-![TaskSync Logo](https://raw.githubusercontent.com/MohamedAbdelaziz177/TaskSync-API/main/logo.png)
+![TaskSync Logo](https://raw.githubusercontent.com/MohamedAbdelaziz177/TaskSync-API/master/logo.png)
 1. Clone & configure `application.properties`  
 2. Run:  
 ```bash 

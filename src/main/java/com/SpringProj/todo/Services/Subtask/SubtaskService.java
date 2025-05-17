@@ -10,6 +10,7 @@ import java.util.List;
 public interface SubtaskService {
 
     SubTask getById(Long id, User user);
+    List<SubTask> getByParentId(Long parentId, User user);
     List<SubTask> getByTaskId(Long id);
     SubTask addSubTask(SubTaskCreateDto subTaskCreateDto);
     SubTask updateSubTask(Long id, SubTaskUpdateDto subTaskUpdateDto, User user);

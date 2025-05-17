@@ -16,6 +16,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/subtask")
 @RequiredArgsConstructor
@@ -31,6 +33,22 @@ public class SubTaskController {
         SubTask subTask = subtaskService.getById(id, user);
 
         res.setData(new SubTaskReadDto(subTask));
+        res.setSuccess(true);
+
+        return ResponseEntity.ok(res);
+
+    }
+
+    @GetMapping("/getByParentId/{id}")
+    public ResponseEntity<ApiResponse<List<SubTaskReadDto>>> getByParentId(@AuthenticationPrincipal User user, @PathVariable Long id)
+    {
+        ApiResponse<List<SubTaskReadDto>> res = new ApiResponse<>();
+
+        List<SubTask> subTasks = subtaskService.getByParentId(id, user);
+
+        List<SubTaskReadDto> Dtos = subTasks.stream().map(SubTaskReadDto::new).toList();
+
+        res.setData(Dtos);
         res.setSuccess(true);
 
         return ResponseEntity.ok(res);

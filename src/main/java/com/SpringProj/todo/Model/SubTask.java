@@ -1,6 +1,7 @@
 package com.SpringProj.todo.Model;
 
 import com.SpringProj.todo.Enums.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,13 @@ public class SubTask {
 
     @OneToMany(mappedBy = "subtask")
     private List<SubtaskAttachment> subtaskAttachments;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonIgnore
+    private SubTask parentSubTask;
+
+    @OneToMany(mappedBy = "parentSubTask", cascade = CascadeType.ALL)
+    private List<SubTask> childSubTasks;
 
 }

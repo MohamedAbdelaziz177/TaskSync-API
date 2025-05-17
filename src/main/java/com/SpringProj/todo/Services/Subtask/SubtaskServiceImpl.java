@@ -39,10 +39,19 @@ public class SubtaskServiceImpl implements SubtaskService {
         else throw new AccessDeniedException("Access denied");
     }
 
+    public List<SubTask> getByParentId(Long parentId, User user)
+    {
+        if(checkAuthorized(parentId, user))
+            return subTaskRepository.findByParentId(parentId).orElseThrow(() ->
+                    new EntityNotFoundException("Subtask not found"));
+
+        else throw new AccessDeniedException("Access denied");
+    }
+
 
     public List<SubTask> getByTaskId(Long id)
     {
-        return subTaskRepository.findByTask_Id(id).orElseThrow(() ->
+        return subTaskRepository.findByTaskId(id).orElseThrow(() ->
                 new EntityNotFoundException("Subtask not found"));
 
 

@@ -10,11 +10,15 @@ import com.SpringProj.todo.Model.User;
 import com.SpringProj.todo.Repository.CategoryRepository;
 import com.SpringProj.todo.Repository.TaskRepository;
 import com.SpringProj.todo.Repository.UserRepository;
+import com.SpringProj.todo.Services.Mail.MailService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     private Optional<User> getManagedUser(User user)
     {
@@ -148,6 +153,38 @@ public class TaskServiceImpl implements TaskService {
                 () -> new EntityNotFoundException("Task not found"));
 
         return tasks;
+    }
+
+    @Scheduled(cron = "@daily")
+    public void NotifyUserBeforeDeadline()
+    {
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+
+            Optional<List<Task>> tasks = taskRepository.findByUserId(user.getId());
+
+            if (tasks.isEmpty()) return;
+
+            var tasksLst = tasks.get();
+
+            boolean hasUpcomingTasks = tasksLst.stream().filter( t -> t.getStatus() == TaskStatus.PENDING ||
+                            t.getStatus() == TaskStatus.IN_PROGRESS
+                    )
+                    .anyMatch(t ->
+                    t.getDeadline() != null &&
+                            t.getDeadline().before(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)));
+
+
+            if (hasUpcomingTasks) {
+                mailService.sendSimpleMail(
+                        user.getEmail(),
+                        "Deadline is approaching",
+                        "You have unfinished tasks. Review TaskSync to complete them before the deadline."
+                );
+            }
+
+        }
     }
 }
 

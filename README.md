@@ -23,11 +23,11 @@ A **Spring Boot** REST API for managing tasks with **subtasks, attachments, and 
 
 ## 🗃 Database Schema
 Here is the visual representation of the database schema:
-![Database Schema](DATABASE_SCHEMEA.png)
+![Database Schema](./Screen_Shots/Database.png)
 
 ## 🧪 Endpoints
 Interactive API documentation powered by Swagger:  
-![Swagger UI](ENDPOINTS.png)
+![Swagger UI](./Screen_Shots/ENDPOINTS.png)
 
 ## 🚀 Quick Start  
 
